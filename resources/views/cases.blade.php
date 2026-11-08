@@ -9,7 +9,6 @@
 <section class="section-shell grid md:grid-cols-2 gap-10 pb-24">@foreach([
     ['Consumer Spending Trends','This research aims to explore in depth the allocation of household expenditures on primary, secondary, and tertiary needs.','home1b.jpg'],
     ['The Impact of Live Shopping on Gen Z’s Sleep Patterns','How late-night live shopping on TikTok and Shopee influences Gen Z’s sleep quality, mental health, and impulsive spending habits.','home1c.jpg'],
-    ['The Impact of Live Shopping on Gen Z’s Sleep Patterns','How late-night live shopping on TikTok and Shopee influences Gen Z’s sleep quality, mental health, and impulsive spending habits.','home1c.jpg']
     ] as $case)<article class="case-card"><img src="/images/{{ $case[2] }}" alt="" loading="lazy">
         <div class="p-8">
             <p class="eyebrow">{{ __('Internal research') }}</p>
