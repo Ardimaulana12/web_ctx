@@ -11,13 +11,13 @@
             <p>Graha Surveyor Indonesia, Lt 15 Unit 1503<br>Jl. Jend. Gatot Subroto, Kav 56<br>Jakarta Selatan, DKI Jakarta 12950</p><a class="text-link" href="mailto:cortexdataid@gmail.com">cortexdataid@gmail.com</a>
         </div>
     </div>
-    <form method="POST" action="{{ route('contact.store') }}" class="contact-form" data-contact-form>@csrf
+    <form method="POST" action="{{ route('contact.store', [], false) }}" class="contact-form" data-contact-form>@csrf
         @if(session('success'))<div role="status" class="success-message">{{ __(session('success')) }}</div>@endif
         @if(session('warning'))<div role="alert" class="mb-6 rounded-lg border border-amber-400 bg-amber-50 p-4 text-amber-950">{{ __(session('warning')) }}</div>@endif
         <div data-error-summary role="alert" tabindex="-1" class="error-message" @if(!$errors->any()) hidden @endif>
             <ul class="mt-2 list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
         </div>
-        <p class="mb-5 text-sm">{{ __('Fields marked * are required. Company / organization is optional.') }}</p>
+        <!-- <p class="mb-5 text-sm">{{ __('Fields marked * are required. Company / organization is optional.') }}</p> -->
         @foreach(['name'=>'Full name','email'=>'Email address','company'=>'Company / organization','subject'=>'Subject','message'=>'Message'] as $field=>$label)
         @php
         $minimum = ['name'=>2, 'subject'=>3, 'message'=>10][$field] ?? null;
@@ -40,7 +40,7 @@
             <p id="{{ $field }}-error" class="text-sm !text-red-700" @if(!$errors->has($field)) hidden @endif>{{ $errors->first($field) }}</p>
         </div>
         @endforeach
-        <button class="button button-blue w-full disabled:opacity-60" type="submit" data-sending="{{ __('Sending...') }}">{{ __('Send message') }} <span aria-hidden="true">?</span></button>
+        <button class="button button-blue w-full disabled:opacity-60" type="submit" data-sending="{{ __('Sending...') }}">{{ __('Send message') }} <span aria-hidden="true"></span></button>
     </form>
 </section>
 @endsection
