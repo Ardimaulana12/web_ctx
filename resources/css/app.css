@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import './components.css' layer(components);
+@import './redesign.css' layer(components);
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@theme { --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif; --color-brand: #1a3951; }
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+  body { margin:0; color:var(--research-ink); background:#fff; font-family:var(--font-sans); }
+  p { line-height:1.8; color:var(--research-muted); }
+  h1,h2,h3,h4 { color:var(--research-navy); }
+  h3 { font-size:19px; font-weight:700; }
+  a,button { -webkit-tap-highlight-color:transparent; }
+  button,a,input,textarea { outline-offset:5px; }
+  button { cursor:pointer; }
+  ::selection { background:#d9def4; }
+}
