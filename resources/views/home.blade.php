@@ -37,7 +37,7 @@
             </div>
             <p class="figures-quote">{{ __('“We are augmenting Social Intelligence for smarter, faster, cheaper and optimized decision, monitoring and evaluation.”') }}</p>
         </div>
-        <div class="figures-panel">@foreach(['30'=>'Province coverage','5'=>'Product core & service','12'=>'Clients served'] as $number=>$label)
+        <div class="figures-panel">@foreach(['30'=>'Province coverage','6'=>'Product core & service','12'=>'Clients served'] as $number=>$label)
             <div class="figure-cell"><strong class="stat"><span class="sr-only">{{ $number }}</span><span class="counter" data-count="{{ $number }}" aria-hidden="true">{{ $number }}</span></strong>
                 <p class="stat-label">{{ __($label) }}</p>
             </div>
@@ -45,7 +45,9 @@
         </div>
     </div>
 </section>
-<section class="section-shell py-14 client-section"><p class="eyebrow text-center">{{ __('Organizations we have worked with') }}</p><img src="/images/clients.jpg" alt="{{ __('Organizations and clients served by Cortex') }}" class="client-logos" loading="lazy"></section>
+<section class="section-shell py-14 client-section">
+    <p class="eyebrow text-center">{{ __('Organizations we have worked with') }}</p><img src="/images/clients.jpg" alt="{{ __('Organizations and clients served by Cortex') }}" class="client-logos" loading="lazy">
+</section>
 <section class="section-shell section-space">
     <h2 class="section-title text-center">{{ __('OUR') }} <span>{{ __('VALUES') }}</span></h2>
     <div class="grid gap-8 md:grid-cols-3 mt-14">
