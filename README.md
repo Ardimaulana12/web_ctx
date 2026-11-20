@@ -10,7 +10,7 @@ Tampilan mengikuti referensi CTX Research lokal: palet navy/teal, hero berlatar 
 
 Jalankan composer install dan npm install. Salin .env.example menjadi .env lalu jalankan php artisan key:generate. Buat database ctx_website pada MySQL dan sesuaikan DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD di .env.
 
-Jalankan php artisan migrate, npm run build, kemudian php artisan serve. Buka http://127.0.0.1:8000. Saat mengembangkan styling, jalankan npm run dev di terminal lain.
+Jalankan `php artisan migrate --seed`, `npm run build`, kemudian `php artisan serve`. Buka http://127.0.0.1:8000. Saat mengembangkan styling, jalankan npm run dev di terminal lain. Untuk database yang sudah dimigrasi, jalankan `php artisan db:seed`; seeder hanya mengisi data yang belum ada dan mempertahankan perubahan data sebelumnya.
 
 ## Database lokal
 
@@ -22,18 +22,18 @@ Jalankan ./start-local.ps1 dari PowerShell untuk menghidupkan database lokal dan
 
 - Homepage, layanan, case study, blog, dan kontak.
 - Halaman /about memuat profil perusahaan dan tim pimpinan.
-- Dropdown ID/EN di kanan tombol kontak. Bahasa Inggris menjadi default; pilihan tersimpan dalam session. Terjemahan terdapat di lang/id.json, lang/en.json, dan lang/id/validation.php.
+- Dropdown ID/EN di kanan tombol kontak. Bahasa Inggris menjadi default; pilihan tersimpan dalam session. Bahasa, konten, terjemahan, navigasi, dan kontak dibaca dari lima tabel ERD. File `lang/id/validation.php` tetap digunakan untuk pesan validasi framework. Pemetaan lengkap ada di [docs/database.md](docs/database.md).
 - Footer biru tua #061C3D. Instagram @ctx_corp; WhatsApp +62 812-1133-7721 dengan pesan awal Hello Cortex Data.
 - Animasi masuk dan reveal saat scroll menghormati prefers-reduced-motion dan tidak memblokir konten ketika JavaScript tidak aktif.
 - Menu hamburger pada lebar di bawah 1280px, termasuk ponsel dan tablet landscape. Mendukung keyboard dan Escape.
-- Form kontak menggunakan validasi server, CSRF, pembatasan 5 permintaan/menit, dan penyimpanan pada tabel inquiries. Tidak mengirim email otomatis.
+- Form kontak menggunakan validasi server, CSRF, pembatasan 5 permintaan/menit, dan penyimpanan pada tabel `hubungi_kami` (sebelumnya `inquiries`). Notifikasi email mengikuti konfigurasi SMTP yang sudah ada.
 - Aset visual disimpan lokal di public/images dari situs referensi https://www.ctx.co.id/.
 - Tautan blog membuka artikel asli. Permintaan case study membuka form dengan subject terisi.
 - Leadership memakai inisial karena referensi memakai foto placeholder yang sama.
 
 ## Pengujian
 
-Jalankan php artisan test dan npm run build. Feature test memeriksa halaman publik, penyimpanan kontak dan penolakan input invalid. Transaksi database pengujian di-rollback; migrasi harus sudah dijalankan.
+Jalankan `php artisan test` dan `npm run build`. Migrasi dan seeder harus sudah dijalankan. Pengujian mencakup seluruh halaman EN/ID, kesetaraan HTML awal, relasi, constraint, pembacaan perubahan database, seeder berulang, serta form kontak. Perubahan data pengujian di-rollback. Uji migrasi memakai database sementara bernama `ctx_erd_test_<acak>` pada server yang sama, lalu menghapusnya; akun pengujian memerlukan hak CREATE/DROP DATABASE. Rincian ada di [docs/database.md](docs/database.md).
 
 ### Contact email delivery
 

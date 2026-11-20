@@ -1,5 +1,4 @@
 @extends('layout')
-@section('title', __('Company Profile').' — CTX Corp')
 @section('content')
 <section class="page-heading page-heading-centered section-shell">
     <p class="eyebrow">{{ __('Company Profile') }}</p>
@@ -15,11 +14,7 @@
     </div>
 </section>
 <section class="quality section-space">
-    <div class="section-shell grid gap-12 md:grid-cols-3">@foreach([
-        ['Our approach', 'We start with the right questions, listen to people, and turn evidence into insights that organizations can act on.'],
-        ['Our expertise', 'Our team brings together social and market research, data science, engineering, and field operations.'],
-        ['Our commitment', 'We put clients first, uphold research quality, and build long-term partnerships through responsible and relevant solutions.']
-        ] as $item)<article>
+    <div class="section-shell grid gap-12 md:grid-cols-3">@foreach($sections['list_1'] as $item)<article>
             <p class="eyebrow">{{ sprintf('%02d', $loop->iteration) }}</p>
             <h3>{{ __($item[0]) }}</h3>
             <p class="mt-4">{{ __($item[1]) }}</p>

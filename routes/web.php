@@ -1,17 +1,19 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\WebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
-Route::view('/', 'home')->name('home');
-Route::view('/product-and-services', 'services')->name('services');
-Route::view('/case-study', 'cases')->name('cases');
-Route::view('/blog', 'blog')->name('blog');
-Route::view('/contact', 'contact')->name('contact');
-Route::view('/about', 'about')->name('about');
+Route::get('/', [WebsiteController::class, 'show'])->name('home');
+Route::get('/product-and-services', [WebsiteController::class, 'show'])->name('services');
+Route::get('/case-study', [WebsiteController::class, 'show'])->name('cases');
+Route::get('/blog', [WebsiteController::class, 'show'])->name('blog');
+Route::get('/contact', [WebsiteController::class, 'show'])->name('contact');
+Route::get('/about', [WebsiteController::class, 'show'])->name('about');
 Route::post('/language', function (Request $request) {
-    $data = $request->validate(['locale' => ['required', 'in:id,en'], 'return_to' => ['nullable', 'string']]);
+    $data = $request->validate(['locale' => ['required', Rule::exists('bahasa', 'kode_bahasa')->where('status', 'aktif')], 'return_to' => ['nullable', 'string']]);
     $request->session()->put('locale', $data['locale']);
     $destination = $data['return_to'] ?? '/';
     $path = parse_url($destination, PHP_URL_PATH);

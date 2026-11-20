@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ContactInquiry;
-use App\Models\Inquiry;
+use App\Models\HubungiKami;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class ContactController extends Controller
@@ -24,7 +24,13 @@ class ContactController extends Controller
             'company' => __('Company / organization'), 'subject' => __('Subject'),
             'message' => __('Message'),
         ]);
-        $inquiry = Inquiry::create($data);
+        $hubungi = HubungiKami::create([
+            'nama' => $data['name'],
+            'email' => $data['email'],
+            'perusahaan' => $data['company'] ?? null,
+            'subjek' => $data['subject'],
+            'pesan' => $data['message'],
+        ]);
 
         try {
             // Never report a log/array/fallback transport as a delivered email.
@@ -35,8 +41,9 @@ class ContactController extends Controller
         } catch (Throwable $exception) {
             // Do not put message contents or SMTP credentials in the application log.
             Log::warning('Contact email could not be sent.', [
-                'inquiry_id' => $inquiry->id, 'exception' => get_class($exception),
+                'id_hubungi' => $hubungi->id_hubungi, 'exception' => get_class($exception),
             ]);
+
             return redirect()->route('contact')->with('warning',
                 'Your message was saved, but the notification email could not be sent. You do not need to submit it again. For urgent requests, please contact us by email or WhatsApp.');
         }

@@ -13,14 +13,14 @@
 @include('partials.services')
 <section id="about" class="section-shell section-space text-center home-profile">
     <h2 class="section-title">{{ __('AT') }}
-        <span>CORTEX</span>
+        <span>{{ $shared['brand'] }}</span>
         {{ __(', WE PROVIDE TRUE') }}
         <br class="hidden md:block"> {{ __('UNDERSTANDING ABOUT') }}
     </h2>
     <p class="intro-copy">{{ __('Society, Market, People, to help our clients make smarter, faster, optimized and better decision, monitoring and evaluation.') }}</p>
     <a class="text-link inline-block mt-6" href="{{ route('about') }}">{{ __('Company Profile') }} ↗</a>
     <div class="grid gap-5 md:grid-cols-3 mt-16">
-        @foreach(['Society', 'Market', 'People'] as $topic)
+        @foreach($sections['list_1'] as $topic)
         <figure class="topic-card">
             <img src="/images/home1{{ ['a','b','c'][$loop->index] }}.jpg" alt="{{ __($topic) }}" loading="lazy">
             <!-- <figcaption>{{ __($topic) }}</figcaption> -->
@@ -37,7 +37,7 @@
             </div>
             <p class="figures-quote">{{ __('“We are augmenting Social Intelligence for smarter, faster, cheaper and optimized decision, monitoring and evaluation.”') }}</p>
         </div>
-        <div class="figures-panel">@foreach(['30'=>'Province coverage','6'=>'Product core & service','12'=>'Clients served'] as $number=>$label)
+        <div class="figures-panel">@foreach($sections['list_2'] as $number=>$label)
             <div class="figure-cell"><strong class="stat"><span class="sr-only">{{ $number }}</span><span class="counter" data-count="{{ $number }}" aria-hidden="true">{{ $number }}</span></strong>
                 <p class="stat-label">{{ __($label) }}</p>
             </div>
@@ -51,11 +51,7 @@
 <section class="section-shell section-space">
     <h2 class="section-title text-center">{{ __('OUR') }} <span>{{ __('VALUES') }}</span></h2>
     <div class="grid gap-8 md:grid-cols-3 mt-14">
-        @foreach([
-        ['CURIOSITY','We are curious about the social interaction and world around us by asking the right questions. We seek the new and unexpected variables that greatly impact any decisions.'],
-        ['ENTREPRENEURIAL','We are collectively and socially smarter than any of us individually. We work in a diverse culture and encourage individuals to try different and innovative approaches.'],
-        ['CLIENT FIRST','We put clients first, always focusing on long-term partnerships. We are responsible for providing our clients with the optimum solution to solve problems and achieve objectives.']
-        ] as $value)
+        @foreach($sections['list_3'] as $value)
         <article class="value-card">
             <img src="/images/mid{{ $loop->iteration }}.jpg" alt="" loading="lazy">
             <h3>{{ __($value[0]) }}</h3>
@@ -68,11 +64,7 @@
     <div class="section-shell">
         <p class="eyebrow text-center">{{ __('Our dedication for quality assurance') }}</p>
         <h2 class="section-title text-center">{{ __('QUALITY') }} <span>{{ __('ASSURANCE') }}</span></h2>
-        <div class="grid gap-10 md:grid-cols-3 mt-14">@foreach([
-            ['SOCIAL RESEARCH','2 centres of excellence','Data and insight coordination and verification in Jakarta (Research) and Banten (Field Services & Engineering). Fulltime research scientists, data auditors and field operations.'],
-            ['DIGITAL TECHNOLOGY','Latest digital technology','Supported by multi-cloud providers to accelerate delivery and support operational efficiency. Fulltime data engineering and business intelligence.'],
-            ['EXPERT TEAM','More than 20 years of experience','Reputable experts in social intelligence research and activations, with dedicated expertise in social and market research, data science and engineering.']
-            ] as $item)<article class="quality-card">
+        <div class="grid gap-10 md:grid-cols-3 mt-14">@foreach($sections['list_4'] as $item)<article class="quality-card">
                 <div class="quality-icon">{{ ['◎','⌘','◇'][$loop->index] }}</div>
                 <h3>{{ __($item[0]) }}</h3>
                 <h4 class="font-semibold my-3">{{ __($item[1]) }}</h4>
@@ -86,7 +78,7 @@
         <h2 class="section-title">{{ __('Better research. Smarter technology.') }}</h2>
     </div>
     <div class="technology-layout"><img src="/images/technology.jpg" alt="{{ __('Technology supporting social intelligence') }}" class="rounded-3xl w-full" loading="lazy">
-        <div>@foreach(['MEASURE SOCIALLY'=>'Web and social listening, community observations, behavioural economics, ethnography, consumer & retail analytics, media sentiment monitoring, targeted audience analytics.','COLLECT REAL TIME'=>'Mobile, digital services overnight, qualitative feedback management (EFM).','LARGE PROCESSING'=>'Cloud-based data streamlining, data analytics and data science.'] as $title=>$description)<div class="technology-item">
+        <div>@foreach($sections['list_5'] as $title=>$description)<div class="technology-item">
                 <h3>{{ __($title) }}</h3>
                 <p>{{ __($description) }}</p>
             </div>@endforeach</div>

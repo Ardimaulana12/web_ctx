@@ -2,15 +2,24 @@
 
 namespace Tests\Feature;
 
-use App\Models\Inquiry;
 use App\Mail\ContactInquiry;
-use Illuminate\Support\Facades\Mail;
+use App\Models\HubungiKami;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class WebsiteTest extends TestCase
 {
     use DatabaseTransactions;
+
+    public function test_contact_table_has_only_the_requested_indonesian_column_names(): void
+    {
+        $this->assertFalse(Schema::hasTable('inquiries'));
+        $this->assertSame([
+            'id_hubungi', 'nama', 'email', 'perusahaan', 'subjek', 'pesan', 'created_at', 'updated_at',
+        ], Schema::getColumnListing('hubungi_kami'));
+    }
 
     public function test_all_public_pages_load(): void
     {
@@ -40,49 +49,59 @@ class WebsiteTest extends TestCase
 
     public function test_contact_request_is_saved_in_database(): void
     {
-        config(['mail.default' => 'smtp']);
+        config(['mail.default' => 'smtp', 'mail.contact_to' => 'contact-tests@example.com']);
         Mail::fake();
         $this->post('/contact', [
             'name' => 'Website Test', 'email' => 'test@example.com',
             'company' => 'Test Organization', 'subject' => 'Research inquiry',
             'message' => 'We would like to discuss a market research project.',
         ])->assertRedirect('/contact')->assertSessionHas('success');
-        $this->assertDatabaseHas('inquiries', ['email' => 'test@example.com', 'subject' => 'Research inquiry']);
-        Mail::assertSent(ContactInquiry::class, fn ($mail) => $mail->hasTo('ardimaulana265@gmail.com') && $mail->inquiry['email'] === 'test@example.com');
+        $this->assertDatabaseHas('hubungi_kami', [
+            'nama' => 'Website Test', 'email' => 'test@example.com',
+            'perusahaan' => 'Test Organization', 'subjek' => 'Research inquiry',
+            'pesan' => 'We would like to discuss a market research project.',
+        ]);
+        $saved = HubungiKami::where('email', 'test@example.com')->latest('id_hubungi')->firstOrFail();
+        $this->assertGreaterThan(0, $saved->id_hubungi);
+        $this->assertNotNull($saved->created_at);
+        $this->assertNotNull($saved->updated_at);
+        $this->assertTrue(HubungiKami::findOrFail($saved->id_hubungi)->is($saved));
+        Mail::assertSent(ContactInquiry::class, fn ($mail) => $mail->hasTo('contact-tests@example.com') && $mail->inquiry['email'] === 'test@example.com');
     }
 
     public function test_invalid_contact_data_is_rejected(): void
     {
-        $before = Inquiry::count();
+        $before = HubungiKami::count();
         $this->post('/contact', ['email' => 'invalid'])->assertSessionHasErrors(['name', 'email', 'subject', 'message']);
-        $this->assertSame($before, Inquiry::count());
+        $this->assertSame($before, HubungiKami::count());
     }
+
     public function test_log_mailer_shows_warning_instead_of_false_success(): void
     {
         config(['mail.default' => 'log']);
         Mail::fake();
-        $this->post('/contact', ['name'=>'Test User', 'email'=>'test@example.com',
-            'subject'=>'Research', 'message'=>'Please contact me about research.'])
+        $this->post('/contact', ['name' => 'Test User', 'email' => 'test@example.com',
+            'subject' => 'Research', 'message' => 'Please contact me about research.'])
             ->assertSessionHas('warning')->assertSessionMissing('success');
         Mail::assertNothingSent();
-        $this->assertDatabaseHas('inquiries', ['subject'=>'Research']);
+        $this->assertDatabaseHas('hubungi_kami', ['subjek' => 'Research', 'perusahaan' => null]);
     }
 
     public function test_smtp_failure_preserves_the_message(): void
     {
         config(['mail.default' => 'smtp']);
         Mail::shouldReceive('to')->once()->andThrow(new \RuntimeException('Unavailable'));
-        $this->post('/contact', ['name'=>'Test User', 'email'=>'test@example.com',
-            'subject'=>'SMTP failure', 'message'=>'Please contact me about research.'])
+        $this->post('/contact', ['name' => 'Test User', 'email' => 'test@example.com',
+            'subject' => 'SMTP failure', 'message' => 'Please contact me about research.'])
             ->assertSessionHas('warning')->assertSessionMissing('success');
-        $this->assertDatabaseHas('inquiries', ['subject'=>'SMTP failure']);
+        $this->assertDatabaseHas('hubungi_kami', ['subjek' => 'SMTP failure']);
     }
 
     public function test_short_fields_are_rejected_with_indonesian_errors(): void
     {
-        $this->withSession(['locale'=>'id'])->post('/contact', [
-            'name'=>'A', 'email'=>'wrong', 'subject'=>'Hi', 'message'=>'short',
-        ])->assertSessionHasErrors(['name','email','subject','message']);
+        $this->withSession(['locale' => 'id'])->post('/contact', [
+            'name' => 'A', 'email' => 'wrong', 'subject' => 'Hi', 'message' => 'short',
+        ])->assertSessionHasErrors(['name', 'email', 'subject', 'message']);
         $this->get('/contact')->assertSee('minimal 10 karakter')->assertSee('aria-invalid="true"', false);
     }
 }

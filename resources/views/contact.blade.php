@@ -1,5 +1,4 @@
 @extends('layout')
-@section('title', __('Contact Us — CTX Corp'))
 @section('content')
 <section class="section-shell section-space grid gap-14 lg:grid-cols-2">
     <div class="page-heading !p-0">
@@ -8,7 +7,7 @@
         <p>{{ __('Tell us about your research needs. Start a conversation with our team.') }}</p>
         <div class="mt-10">
             <h3>{{ __('Visit our office') }}</h3>
-            <p>Graha Surveyor Indonesia, Lt 15 Unit 1503<br>Jl. Jend. Gatot Subroto, Kav 56<br>Jakarta Selatan, DKI Jakarta 12950</p><a class="text-link" href="mailto:cortexdataid@gmail.com">cortexdataid@gmail.com</a>
+            <p>{!! nl2br(e($shared['office_address']), false) !!}</p><a class="text-link" href="mailto:{{ $contact->email }}">{{ $contact->email }}</a>
         </div>
     </div>
     <form method="POST" action="{{ route('contact.store', [], false) }}" class="contact-form" data-contact-form>@csrf
@@ -18,7 +17,7 @@
             <ul class="mt-2 list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
         </div>
         <!-- <p class="mb-5 text-sm">{{ __('Fields marked * are required. Company / organization is optional.') }}</p> -->
-        @foreach(['name'=>'Full name','email'=>'Email address','company'=>'Company / organization','subject'=>'Subject','message'=>'Message'] as $field=>$label)
+        @foreach($sections['list_1'] as $field=>$label)
         @php
         $minimum = ['name'=>2, 'subject'=>3, 'message'=>10][$field] ?? null;
         $maximum = ['subject'=>200, 'message'=>5000][$field] ?? 150;
